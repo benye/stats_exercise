@@ -6,11 +6,15 @@ class Person(PolymorphicModel):
 
     p_id = models.CharField(max_length=10)
     
+    def __unicode__(self):
+        return self.p_id
 
 class Thing(models.Model):
 
-    t_id = models.CharField(max_length=10)  
+    t_id = models.CharField(max_length=10)
 
+    def __unicode__(self):
+            return self.t_id
 
 class LivePeople(Person):
     
@@ -32,3 +36,8 @@ class DeadThings(models.Model):
 
     thing = models.ForeignKey(Thing)
     person = models.ForeignKey(DeadPeople, unique=True)
+
+
+class Holder(models.Model):
+
+    value = models.CharField(max_length=20)

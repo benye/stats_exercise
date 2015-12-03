@@ -38,11 +38,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'people',
     'things',
     'django_extensions',
     'polymorphic',
-    
+    'csvimport.app.CSVImportConf',
 )
 
 MIDDLEWARE_CLASSES = (
