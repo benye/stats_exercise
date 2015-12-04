@@ -52,17 +52,42 @@ from datetime import datetime, timedelta
 from things.models import Thing
 from things.models import Person
 from things.models import LivePeople
+from things.models import DeadPeople
 from things.models import LiveThings
 from things.models import DeadThings
 from things.models import Holder
 
 
 
+class objectview(object):
+    def __init__(self, d):
+        self.__dict__ = d
+
+
 
 def display_stuff(request):
 
 
-	things_list = Thing.objects.all()
+	new_list = Holder.objects.all()
+	#things_list = []
+	for item in new_list:
+		string_value = str(item.value)
+		string_value = string_value.replace(' ', '')
+		string_value = string_value.replace('\n', '')
+		string_list = re.split(";", string_value)
+		#p=DeadPeople.objects.create(p_id=string_list[0], age_at_death=string_list[1])
+		#p.save() 
+	    
+	things_list = DeadPeople.objects.all()
+
+	'''for item in new_list:
+		value = {'p_id':"b>"+str(item.t_id)+"<b"}
+		new_entry = objectview(value)
+		things_list.append(value)'''
+	
 
 
-	return render_to_response('base.html',{ 'things_list' : things_list, }, context_instance=RequestContext(request))
+	size = len(things_list)
+
+
+	return render_to_response('base.html',{ 'things_list' : things_list, 'size': size ,}, context_instance=RequestContext(request))

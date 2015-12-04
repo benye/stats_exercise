@@ -29,15 +29,18 @@ class DeadPeople(Person):
 class LiveThings(models.Model):
 
     thing = models.ForeignKey(Thing)
-    person = models.ForeignKey(LivePeople, unique=True)
+    person = models.CharField(max_length=10)
 
 
 class DeadThings(models.Model):
 
     thing = models.ForeignKey(Thing)
-    person = models.ForeignKey(DeadPeople, unique=True)
+    person = models.CharField(max_length=10)
 
 
 class Holder(models.Model):
 
     value = models.CharField(max_length=20)
+
+    def __unicode__(self):
+            return self.value
