@@ -31,11 +31,17 @@ class LiveThings(models.Model):
     thing = models.ForeignKey(Thing)
     person = models.CharField(max_length=10)
 
+    def __unicode__(self):
+            return self.person+" "+self.thing.t_id
+
 
 class DeadThings(models.Model):
 
     thing = models.ForeignKey(Thing)
     person = models.CharField(max_length=10)
+
+    def __unicode__(self):
+            return self.person+" "+self.thing.t_id
 
 
 class Holder(models.Model):

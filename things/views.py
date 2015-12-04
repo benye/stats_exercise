@@ -67,23 +67,26 @@ class objectview(object):
 
 def display_stuff(request):
 
-
+    
 	new_list = Holder.objects.all()
 	#things_list = []
 	for item in new_list:
 		string_value = str(item.value)
 		string_value = string_value.replace(' ', '')
 		string_value = string_value.replace('\n', '')
+		string_value = string_value.replace('"', '')
+		string_list = []
 		string_list = re.split(";", string_value)
-		#p=DeadPeople.objects.create(p_id=string_list[0], age_at_death=string_list[1])
+		thing_key = Thing.objects.get(t_id=string_list[1])
+		#p=DeadThings.objects.create(thing=thing_key, person=string_list[0])
 		#p.save() 
 	    
-	things_list = DeadPeople.objects.all()
+	things_list = DeadsThings.objects.all()
 
-	'''for item in new_list:
+	for item in new_list:
 		value = {'p_id':"b>"+str(item.t_id)+"<b"}
 		new_entry = objectview(value)
-		things_list.append(value)'''
+		things_list.append(value)
 	
 
 

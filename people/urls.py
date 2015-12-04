@@ -13,4 +13,5 @@ urlpatterns = patterns('',
 
 
     url(r'^list/$',views.display_stuff,name = 'display_things'),
+    #url(r'^/$',views.display_stuff,name = 'display_things'),
 )
