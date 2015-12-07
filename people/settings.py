@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'polymorphic',
     'csvimport.app.CSVImportConf',
+    'numpy',
 )
 
 MIDDLEWARE_CLASSES = (

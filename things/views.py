@@ -58,6 +58,10 @@ from things.models import DeadThings
 from things.models import Holder
 
 
+#stats stuff
+
+import collections
+import numpy as np
 
 class objectview(object):
     def __init__(self, d):
@@ -67,30 +71,114 @@ class objectview(object):
 
 def display_stuff(request):
 
-    
-	new_list = Holder.objects.all()
-	#things_list = []
-	for item in new_list:
-		string_value = str(item.value)
-		string_value = string_value.replace(' ', '')
-		string_value = string_value.replace('\n', '')
-		string_value = string_value.replace('"', '')
-		string_list = []
-		string_list = re.split(";", string_value)
-		thing_key = Thing.objects.get(t_id=string_list[1])
-		#p=DeadThings.objects.create(thing=thing_key, person=string_list[0])
-		#p.save() 
-	    
-	things_list = DeadsThings.objects.all()
+	
+	
+	l_list = LiveThings.objects.all()
+	d_list = DeadThings.objects.all()
+	all_list = Thing.objects.all()
 
-	for item in new_list:
-		value = {'p_id':"b>"+str(item.t_id)+"<b"}
-		new_entry = objectview(value)
-		things_list.append(value)
+	combined_list = []	
+
+
+ 	new_living_list = []
+ 	new_dead_list = []
+ 	new_all_list = []
+
+	for item in l_list:
+		new_living_list.append(item.thing.t_id)
+
+	for item in d_list:
+	    new_dead_list.append(item.thing.t_id)
+
+	for item in all_list:
+		new_all_list.append(item.t_id)
+
+	#list of union of living owned and dead owned
+	union_list = new_living_list + new_dead_list
+
+	live_set = set(new_living_list)
+	living_set_len = len(list(live_set))
+
+	dead_set = set(new_dead_list)
+	dead_set_len = len(list(dead_set))
+
+	#unique set of the above
+	union_set = set(union_list)
+
+	#length of union set
+	union_set_len = len(list(union_set))
+
+	#set of universal things
+	universal_set = set(new_all_list)
+
+	#length of universal set
+	universal_set_len = len(list(universal_set))
+
+
+	ll = set(new_living_list)
+	dd = set(new_dead_list)
+	u = set(new_all_list)
+
+	a = union_set_len
+	b = universal_set_len
+	c = living_set_len
+	d = dead_set_len
+
+	
+
 	
 
 
-	size = len(things_list)
+	return render_to_response('base.html',{'a': a, 'b': b,'c':c,'d':d,}, context_instance=RequestContext(request))
+
+	#words = "apple banana apple strawberry banana lemon"
+	#words = re.findall(r'\w+', words)
+	#d = collections.Counter(words).most_common(1)
+
+    ########
+	#calculate top 100 code
+	'''
+
+    l_list = LiveThings.objects.all()
+	d_list = DeadThings.objects.all()
+	combined_list = []	
+
+	for item in l_list:
+		combined_list.append(item)
+
+	for item in d_list:
+		combined_list.append(item)
+
+ 	new_list = []
+ 	#cnt = Counter()
+
+	for item in combined_list:
+		new_list.append(item.thing.t_id)
 
 
-	return render_to_response('base.html',{ 'things_list' : things_list, 'size': size ,}, context_instance=RequestContext(request))
+	a = dict(collections.Counter(new_list).most_common(100))
+	d = collections.OrderedDict(sorted(a.items(), key=lambda t: t[1]))
+
+
+	'''
+	##########
+	# set of things owned only by the living/dead
+
+	'''
+	new_living_list = []
+ 	new_dead_list = []
+ 	
+
+	for item in l_list:
+		new_living_list.append(item.thing.t_id)
+
+	for item in d_list:
+	    new_dead_list.append(item.thing.t_id)
+
+	ll = set(new_living_list)
+	dd = set(new_dead_list)
+	d = []
+	d = list(ll - dd) '''
+  
+
+  #probabilities
