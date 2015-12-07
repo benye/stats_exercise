@@ -68,13 +68,83 @@ class objectview(object):
         self.__dict__ = d
 
 
-
 def display_stuff(request):
+	my_list = DeadPeople.objects.all()
+	new_list = []
 
-	
-	
+	for person in my_list:
+		new_list.append(person.age_at_death)
+
+	d = dict(collections.Counter(new_list).most_common(1))
+
+	return render_to_response('base.html',{'d':d,}, context_instance=RequestContext(request))
+
+def find_median_age(request):
+
+	my_list = LivePeople.objects.all()
+
+	new_list = []
+
+	for person in my_list:
+
+		new_list.append(person.age)
+
+	a = np.array(new_list)
+	d = np.median(a)
+
+	return render_to_response('base.html',{'d':d,}, context_instance=RequestContext(request))
+
+def find_top_hundred(request):
+
 	l_list = LiveThings.objects.all()
 	d_list = DeadThings.objects.all()
+	combined_list = []	
+
+	for item in l_list:
+		combined_list.append(item)
+
+	for item in d_list:
+		combined_list.append(item)
+
+ 	new_list = []
+ 	
+
+	for item in combined_list:
+		new_list.append(item.thing.t_id)
+
+
+	a = dict(collections.Counter(new_list).most_common(100))
+	d = collections.OrderedDict(sorted(a.items(), key=lambda t: t[1]))
+
+	return render_to_response('base.html',{'d':d,}, context_instance=RequestContext(request))
+
+
+def find_distinct_sets(request):
+
+	l_list = LiveThings.objects.all()
+	d_list = DeadThings.objects.all()
+
+	new_living_list = []
+ 	new_dead_list = []
+ 	
+
+	for item in l_list:
+		new_living_list.append(item.thing.t_id)
+
+	for item in d_list:
+	    new_dead_list.append(item.thing.t_id)
+
+	ll = set(new_living_list)
+	dd = set(new_dead_list)
+	d = []
+	d = list(ll - dd) 
+
+	return render_to_response('base.html',{'d':d,}, context_instance=RequestContext(request))
+
+def find_probability(request):
+
+	l_list = LiveThings.objects.all()
+	sd_list = DeadThings.objects.all()
 	all_list = Thing.objects.all()
 
 	combined_list = []	
@@ -124,61 +194,22 @@ def display_stuff(request):
 	c = living_set_len
 	d = dead_set_len
 
-	
+	#probabiity of item being owned at all
+	e = float(a)/b
 
-	
+	#probability of being owned by live person within the ownership set
+	f = float(c)/a
 
+	#probaility of any thing being owned by a live person
+	g = float(e) * f
 
-	return render_to_response('base.html',{'a': a, 'b': b,'c':c,'d':d,}, context_instance=RequestContext(request))
+	#probability of being owned by dead person within the ownership set
+	h = float(d)/a
 
-	#words = "apple banana apple strawberry banana lemon"
-	#words = re.findall(r'\w+', words)
-	#d = collections.Counter(words).most_common(1)
-
-    ########
-	#calculate top 100 code
-	'''
-
-    l_list = LiveThings.objects.all()
-	d_list = DeadThings.objects.all()
-	combined_list = []	
-
-	for item in l_list:
-		combined_list.append(item)
-
-	for item in d_list:
-		combined_list.append(item)
-
- 	new_list = []
- 	#cnt = Counter()
-
-	for item in combined_list:
-		new_list.append(item.thing.t_id)
-
-
-	a = dict(collections.Counter(new_list).most_common(100))
-	d = collections.OrderedDict(sorted(a.items(), key=lambda t: t[1]))
-
-
-	'''
-	##########
-	# set of things owned only by the living/dead
-
-	'''
-	new_living_list = []
- 	new_dead_list = []
+	#probaility of any thing being owned by a dead person
+	i = float(e) * h  
+ 	
+ 	return render_to_response('base.html',{'i':i,}, context_instance=RequestContext(request))
  	
 
-	for item in l_list:
-		new_living_list.append(item.thing.t_id)
-
-	for item in d_list:
-	    new_dead_list.append(item.thing.t_id)
-
-	ll = set(new_living_list)
-	dd = set(new_dead_list)
-	d = []
-	d = list(ll - dd) '''
-  
-
-  #probabilities
+	
